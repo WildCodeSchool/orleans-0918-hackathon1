@@ -12,7 +12,8 @@ class Candies extends Component {
 
     state = {
         candies: [],
-        calories: 0
+        calories: 0,
+        actives: []
     };
 
     componentDidMount() {
@@ -20,29 +21,47 @@ class Candies extends Component {
             .then(response => response.json())
             .then(data => {
                 this.setState({
-                    candies: data.products
+                    candies: data.products,
                 });
-
+                const actives = [];
+                this.state.candies.map((candy) => {
+                    return actives.push(false);
+                })
+                this.setState({
+                    actives
+                });
             })
     }
 
-    handleClick(candy, event) {
-        let calories = this.state.calories+parseInt(candy.nutriments.energy_value);
-        this.setState({calories});
-        console.log(calories);
-        // this.setState(state => ({
-        //     isToggleOn: !state.isToggleOn,
-        //     gps: !this.state.isToggleOn ? localStorage.getItem('gps') : 0,
-        //     calories
-        // }));
+    handleClick(i, candy) {
+        const actives = this.state.actives;
+        actives[i] = !actives[i];
+        let cal = 0;
+        if (actives[i]) {
+            cal = parseInt(candy.nutriments.energy_value);
+        } else  {
+            cal = -parseInt(candy.nutriments.energy_value);
+        }
+        let calories = this.state.calories + cal;
+
+        console.log(actives);
+        this.setState({
+            calories,
+            actives
+        });
     }
 
     render() {
-        const candiesList = this.state.candies.map(candy =>
-            <Candy handleClick={(e) => this.handleClick(candy, e)} active="false" key={Math.random()} name={candy.product_name}
-                   cal={candy.nutriments.energy_value}
-                   src={candy.image_front_small_url}>
-            </Candy>
+        const candiesList = this.state.candies.map((candy, i) => {
+
+                return <Candy handleClick={(e) => this.handleClick(i, candy)}
+                              active={this.state.actives[i]}
+                              key={Math.random()}
+                              name={candy.product_name}
+                              cal={candy.nutriments.energy_value}
+                              src={candy.image_front_small_url}>
+                </Candy>
+            }
         );
 
         return (
