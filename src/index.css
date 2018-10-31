@@ -11,34 +11,92 @@ body {
     background-size: contain;
 }
 
-
 .card {
     /*font-family: "Blood Thirst";*/
     height: 250px;
-    margin-bottom:0.5em;
-    border-radius:0;
-    position:relative;
+    margin-bottom: 0.5em;
+    border-radius: 0;
+    position: relative;
 }
 
 .card img {
     height: 250px;
     object-fit: cover;
     object-position: top;
-    position:absolute;
+    position: absolute;
     z-index: 0;
     filter: grayscale(100%);
 }
 
 .card .card-body {
-    color:white;
-    position:absolute;
+    color: white;
+    position: absolute;
     z-index: 1;
-
+    font-weight:bold;
 }
-
+.card .card-body h5, .card .card-body p {
+    background-color: rgba(0,0,0,0.8);
+    padding: 0.2em;
+}
 .card-on {
-    border:1px solid red;
+    border: 1px solid red;
+    animation: flip 4s;
 }
+
+.candy {
+    position: relative;
+}
+
+.candy .card {
+    z-index: 0;
+}
+
+.zombie {
+    position: absolute;
+    right: 0;
+    opacity: 0;
+    z-index: 1;
+}
+
+.zombie-on {
+    animation: zombie 2s;
+    animation-timing-function: ease-in-out;
+}
+
+@keyframes zombie {
+    from {
+        opacity: 100;
+        transform: translateX(30vw)
+    }
+    to {
+        opacity: 100;
+        transform: translateX(-60vw);
+    }
+}
+
+.calories {
+    color:orange;
+    font-weight: bold;
+    margin: auto;
+    position:fixed;
+    top:0.5em;
+    right:0.5em;
+    z-index:10;
+}
+@keyframes flip {
+    from {
+        transform: rotateY(0deg)
+    }
+    to {
+        transform: rotateY(-360deg)
+    }
+}
+
+.victory {
+    position:relative;
+
+}
+
 .card-on img {
     filter: grayscale(0%);
 }
@@ -49,6 +107,7 @@ body {
 }
 
 .map {
+    filter: invert(100%) grayscale(100%);
     position: relative;
 }
 
@@ -62,4 +121,19 @@ body {
 .address input {
     font-size: 1em;
     opacity: 0.9;
+}
+
+.explosion {
+    display:none;
+}
+.victory .candy {
+    opacity:0.1;
+}
+.victory > .explosion {
+    display:block;
+    width:90vw;
+    margin:auto;
+    position:fixed;
+    z-index:20;
+    top:0vh;
 }

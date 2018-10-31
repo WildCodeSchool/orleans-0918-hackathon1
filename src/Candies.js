@@ -14,6 +14,7 @@ class Candies extends Component {
         candies: [],
         calories: 0,
         actives: [],
+        victory: false
     };
 
     componentDidMount() {
@@ -25,7 +26,7 @@ class Candies extends Component {
                 });
                 const actives = [];
                 this.state.candies.map((candy) => {
-                    return actives.push(false);
+                    return actives.push(0);
                 })
                 this.setState({
                     actives
@@ -35,12 +36,13 @@ class Candies extends Component {
 
     handleClick(i, candy) {
         const actives = this.state.actives;
-        actives[i] = !actives[i];
+        actives[i] = actives[i] ? 0 : localStorage.getItem('gps');
+
         let cal = 0;
         if (actives[i]) {
-            cal = parseInt(candy.nutriments.energy_value);
+            cal = parseInt(candy.nutriments.energy_value ? candy.nutriments.energy_value : 0);
         } else {
-            cal = -parseInt(candy.nutriments.energy_value);
+            cal = -parseInt(candy.nutriments.energy_value ? candy.nutriments.energy_value : 0);
         }
         let calories = this.state.calories + cal;
 
@@ -50,23 +52,23 @@ class Candies extends Component {
         });
 
         if (this.checkAllActivate()) {
-            console.log('victory');
+            this.setState({victory: true});
         }
     }
 
 
     checkAllActivate() {
-        const actives = this.state.actives.filter(a=>a);
+        const actives = this.state.actives.filter(a => a);
         return actives.length === this.state.candies.length;
     }
+
     render() {
         const candiesList = this.state.candies.map((candy, i) => {
-
                 return <Candy handleClick={(e) => this.handleClick(i, candy)}
                               active={this.state.actives[i]}
                               key={Math.random()}
                               name={candy.product_name}
-                              cal={candy.nutriments.energy_value}
+                              cal={typeof(candy.nutriments.energy_value) !== 'undefined' ? candy.nutriments.energy_value : 0}
                               src={candy.image_front_small_url}
                 >
                 </Candy>
@@ -74,9 +76,14 @@ class Candies extends Component {
         );
 
         return (
-            <div className="candies">
+            <div className={this.state.victory ? 'victory' : ''}>
+                <iframe className="explosion" src="https://giphy.com/embed/a8KNLfqsqm2qY" width="100%" height="100%"
+                        frameBorder="0" allowFullScreen></iframe>
                 <div className="row">
-                <div>Total calories : {this.state.calories} Kcal</div>
+                    <div className="calories">
+                        <img width={`${this.state.calories / 50}px`} src="./pumpkin.png" alt="citrouille"/>
+                        <span className="badge badge-warning">{this.state.calories}Kcal</span>
+                    </div>
                 </div>
                 <div className="row">
                     {candiesList}
