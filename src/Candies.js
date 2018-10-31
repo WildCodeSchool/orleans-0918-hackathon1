@@ -13,7 +13,7 @@ class Candies extends Component {
     state = {
         candies: [],
         calories: 0,
-        actives: []
+        actives: [],
     };
 
     componentDidMount() {
@@ -39,18 +39,26 @@ class Candies extends Component {
         let cal = 0;
         if (actives[i]) {
             cal = parseInt(candy.nutriments.energy_value);
-        } else  {
+        } else {
             cal = -parseInt(candy.nutriments.energy_value);
         }
         let calories = this.state.calories + cal;
 
-        console.log(actives);
         this.setState({
             calories,
-            actives
+            actives,
         });
+
+        if (this.checkAllActivate()) {
+            console.log('victory');
+        }
     }
 
+
+    checkAllActivate() {
+        const actives = this.state.actives.filter(a=>a);
+        return actives.length === this.state.candies.length;
+    }
     render() {
         const candiesList = this.state.candies.map((candy, i) => {
 
@@ -59,15 +67,20 @@ class Candies extends Component {
                               key={Math.random()}
                               name={candy.product_name}
                               cal={candy.nutriments.energy_value}
-                              src={candy.image_front_small_url}>
+                              src={candy.image_front_small_url}
+                >
                 </Candy>
             }
         );
 
         return (
-            <div className="row candies">
-                <div>cal: {this.state.calories}</div>
-                {candiesList}
+            <div className="candies">
+                <div className="row">
+                <div>Total calories : {this.state.calories} Kcal</div>
+                </div>
+                <div className="row">
+                    {candiesList}
+                </div>
             </div>
         );
     }
